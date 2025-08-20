@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { clearVideos, changeSearchTerm } from '../features/youtube/youtubeSlice';
 import { getSearchPageVideos } from "../store/reducers/getSearchPageVideos";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
@@ -31,10 +32,13 @@ const Navbar = () => {
       {/* Left Section */}
       <div className="flex gap-8 items-center text-2xl">
         <GiHamburgerMenu />
-        <div className="flex gap-1 items-center">
+        <Link
+          to="/"
+          className="flex gap-1 items-center cursor-pointer"
+        >
           <BsYoutube className="text-3xl text-red-600" />
           <span className="text-2xl">YouTube</span>
-        </div>
+        </Link>
       </div>
 
       {/* Search Section */}
