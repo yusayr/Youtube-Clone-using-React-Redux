@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
 import Spinner from '../components/Spinner'
 import { useAppDispatch, useAppSelector } from '../hooks/useApp'
@@ -11,7 +10,7 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const videos = useAppSelector((state) => state.youtubeApp.videos);
 
-  const [sidebarOpen, setSidebarOpen] = useState(true); // 👈 state for sidebar
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     dispatch(getHomePageVideos(false));
@@ -19,12 +18,7 @@ const Home = () => {
 
   return (
     <div className="max-h-screen overflow-hidden">
-      {/* Navbar */}
-      <div style={{ height: "7.5vh" }}>
-        <Navbar onHamburgerClick={() => setSidebarOpen(!sidebarOpen)} />
-      </div>
-
-      {/* Body */}
+      {/* Body (Navbar already comes from App.jsx) */}
       <div className="flex" style={{ height: "92.5vh" }}>
         <Sidebar isOpen={sidebarOpen} />
 

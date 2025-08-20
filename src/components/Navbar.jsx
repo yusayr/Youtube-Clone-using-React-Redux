@@ -4,21 +4,21 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaMicrophone } from "react-icons/fa";
 import { RiVideoAddLine } from "react-icons/ri";
 import { BsBell } from "react-icons/bs";
-import { useLocation, useNavigate } from 'react-router-dom';
-import { clearVideos, changeSearchTerm } from '../features/youtube/youtubeSlice';
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { clearVideos, changeSearchTerm } from "../features/youtube/youtubeSlice";
 import { getSearchPageVideos } from "../store/reducers/getSearchPageVideos";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp";
-import { Link } from "react-router-dom";
+import { useSidebar } from "../context/SidebarContext";
 
 const Navbar = () => {
+  const { toggle } = useSidebar(); // sidebar context
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const searchTerm = useAppSelector((state) => state.youtubeApp.searchTerm);
 
   const handleSearch = () => {
-    if (!searchTerm.trim()) return; // avoid empty search
-
+    if (!searchTerm.trim()) return;
     if (location.pathname !== "/search") {
       navigate("/search");
     } else {
@@ -28,14 +28,19 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex px-8 h-14 justify-between items-center bg-[#212121] opacity-95 sticky">
+    <div className="flex px-8 h-14 justify-between items-center bg-[#212121] opacity-95 sticky top-0 z-50">
       {/* Left Section */}
       <div className="flex gap-8 items-center text-2xl">
-        <GiHamburgerMenu />
-        <Link
-          to="/"
-          className="flex gap-1 items-center cursor-pointer"
+        <button
+          type="button"
+          aria-label="Toggle sidebar"
+          className="cursor-pointer"
+          onClick={toggle}
         >
+          <GiHamburgerMenu />
+        </button>
+
+        <Link to="/" className="flex gap-1 items-center cursor-pointer">
           <BsYoutube className="text-3xl text-red-600" />
           <span className="text-2xl">YouTube</span>
         </Link>

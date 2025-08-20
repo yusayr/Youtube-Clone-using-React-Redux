@@ -1,63 +1,59 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp";
 import { useEffect } from "react";
 import { getRecommendedVideos } from "../store/reducers/getRecommendedVideos";
 import { getVideoDetails } from "../store/reducers/getVideoDetails";
-import Navbar from "../components/Navbar";
+import { useSidebar } from "../context/SidebarContext";
+import Sidebar from "../components/Sidebar";
 
 function Watch() {
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isOpen, setIsOpen } = useSidebar(); // get state + setter
 
-    const { id } = useParams();
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const currentPlaying = useAppSelector(
-        (state) => state.youtubeApp.currentPlaying
-    );
-    const recommendedVideo = useAppSelector(
-        (state) => state.youtubeApp.recommendedVideo
-    )
+  const currentPlaying = useAppSelector(
+    (state) => state.youtubeApp.currentPlaying
+  );
 
-    console.log(currentPlaying)
+  useEffect(() => {
+    if (id) {
+      dispatch(getVideoDetails(id));
+      setIsOpen(false); // close by default when entering watch
+    } else {
+      navigate("/");
+    }
+  }, [id, navigate, dispatch, setIsOpen]);
 
-    useEffect(() => {
-        if (id) {
-            dispatch(getVideoDetails(id));
-        }
-        else {
-            navigate("/")
-        }
-    }, [id, navigate, dispatch])
+  useEffect(() => {
+    if (currentPlaying && id) dispatch(getRecommendedVideos(id));
+  }, [currentPlaying, dispatch, id]);
 
-    useEffect(() => {
-        if (currentPlaying && id) dispatch(getRecommendedVideos(id));
-    }, [currentPlaying, dispatch, id]);
+  return (
+    <div className="max-h-screen overflow-hidden">
+      {/* spacer for global navbar */}
+      <div style={{ height: "7.5vh" }} />
 
-    return (
-        <div>
-            {currentPlaying && currentPlaying?.videoId === id && (
-                <div className='max-h-screen overflow-hidden'>
-                    <div style={{ height: "7.5vh" }}>
-                        <Navbar />
-                    </div>
-                    <div>
-                        <div>
-                            <div>
-                                <div className="flex justify-center items-center h-[92.5vh]">
-                                    <iframe src={`https://www.youtube.com/embed/${id}?autoplay=1`}
-                                    style={{ border: "none" }}
-                                    width={800}
-                                    height={502}
-                                    allowFullScreen
-                                    title="Youtube Player">
-                                    </iframe>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+      <div className="flex" style={{ height: "92.5vh" }}>
+        {/* Sidebar togglable */}
+        <Sidebar isOpen={isOpen} />
+
+        {/* Video player */}
+        <div className="flex-1 flex justify-center items-center">
+          {currentPlaying && currentPlaying?.videoId === id && (
+            <iframe
+              src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+              style={{ border: "none" }}
+              width={800}
+              height={502}
+              allowFullScreen
+              title="Youtube Player"
+            />
+          )}
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
-export default Watch
+export default Watch;

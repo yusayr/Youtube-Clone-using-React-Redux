@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
 import Spinner from '../components/Spinner'
 import { useAppDispatch, useAppSelector } from '../hooks/useApp'
@@ -28,9 +27,6 @@ const Search = () => {
 
     return (
         <div className="max-h-screen overflow-hidden">
-            <div style={{ height: "7.5vh" }}>
-                <Navbar />
-            </div>
             <div className="flex" style={{ height: "92.5vh" }}>
                 <Sidebar />
                 {videos.length ? (
